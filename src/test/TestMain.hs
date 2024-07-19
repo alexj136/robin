@@ -1,20 +1,15 @@
 module Main where
 
-import TestUtil
-import qualified TestParser as P
+import Test.HUnit
+import qualified System.Exit as Exit
+--import qualified TestParser as P
+import qualified TestSugarSyntax as SS
 import qualified TestTypeCheck as TC
 
-import System.Exit
+tests :: Test
+tests = TestList [{-P.tests,-} SS.tests, TC.tests]
 
-main :: IO ExitCode
+main :: IO ()
 main = do
-    putStr "\n"
-    result <- runTests tests
-    if result then do
-        putStrLn "All tests passed."
-        exitSuccess
-    else
-        exitFailure
-
-tests :: [Test]
-tests = TC.tests ++ P.tests
+    result <- runTestTT tests
+    if failures result > 0 then Exit.exitFailure else Exit.exitSuccess

@@ -1,13 +1,11 @@
 module TestParser where
 
-import TestUtil
-
-import Util
 import Lexer
 import Parser
 import SugarSyntax
+import Test.HUnit
 import Types
-
+import Util
 import qualified Data.Map as M
 
 parseStr :: String -> Result (M.Map Name String, Name, Term)
@@ -21,7 +19,7 @@ testParse testDesc progText expectedAST = testResult testDesc $ do
         (_, _, parsedAST) <- parseStr progText
         if parsedAST == expectedAST then return () else throwBasic ""
 
-tests :: [Test]
+tests :: Test
 tests =
     [ testParse "Simple expression 1" "x" (Var NoInfo (Name 0))
     , testParse "Simple expression 2" "x y"

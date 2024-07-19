@@ -1,11 +1,10 @@
 module TestTypeCheck where
 
-import TestUtil
-
 import Util
 import SugarSyntax
+import Test.HUnit
 import Types
 import TypeCheck
 
-tests :: [Test]
-tests = []
+tests :: Test
+tests = TestList []

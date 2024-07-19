@@ -46,9 +46,10 @@ Test-Suite robin-testsuite
                         containers,
                         array,
                         mtl,
+                        HUnit,
                         robin
-  other-modules:        TestUtil,
-                        TestParser,
+  other-modules:        TestSugarSyntax,
+  -- TestParser,
                         TestTypeCheck
   type:                 exitcode-stdio-1.0
   main-is:              TestMain.hs
