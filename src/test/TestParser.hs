@@ -1,5 +1,6 @@
 module TestParser where
 
+import Control.Monad.Except (runExcept, Except)
 import Lexer
 import Parser
 import SugarSyntax
@@ -14,13 +15,22 @@ parseStr progText = do
     ast <- parse tokens
     return (swap names, nextName, ast)
 
+getAst :: Result (M.Map Name String, Name, Term) -> Result Term
+getAst result = do
+    (_, _, ast) <- result
+    return ast
+
+parseUnsafe :: String -> Term
+parseUnsafe s = case (runExcept . getAst . parseStr) s of
+    Right t -> t
+    Left e -> error (e M.empty)
+
 testParse :: String -> String -> Term -> Test
-testParse testDesc progText expectedAST = testResult testDesc $ do
-        (_, _, parsedAST) <- parseStr progText
-        if parsedAST == expectedAST then return () else throwBasic ""
+testParse testDesc progText expectedAst =
+    TestCase $ assertEqual testDesc (parseUnsafe progText) expectedAst
 
 tests :: Test
-tests =
+tests = TestList $
     [ testParse "Simple expression 1" "x" (Var NoInfo (Name 0))
     , testParse "Simple expression 2" "x y"
         (App NoInfo (Var NoInfo (Name 0)) (Var NoInfo (Name 1)))
